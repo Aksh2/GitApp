@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.project.R
+import com.project.data.BaseState
 import com.project.data.GithubUser
 import com.project.data.UserListState
 import com.project.viewmodel.UserViewModel
@@ -76,20 +77,19 @@ fun GithubUserList(
     LaunchedEffect(Unit) {
         viewModel.getUsers()
     }
-    val userListState by viewModel.userListState.collectAsStateWithLifecycle(initialValue = UserListState.Loading)
+    val userListState by viewModel.userListState.collectAsStateWithLifecycle(initialValue = BaseState.Loading())
     when (val state = userListState) {
-        is UserListState.Loading -> {}
-        is UserListState.Success -> {
+        is BaseState.Loading -> {}
+        is BaseState.Success -> {
             val data = state.users
             LazyColumn {
                 items(data) { item ->
                     GithubUserItem(item = item, onClick = { onItemClick(item) })
                 }
             }
-
         }
 
-        is UserListState.Error -> {}
+        is BaseState.Error -> {}
     }
 
 }
