@@ -26,8 +26,8 @@ fun Webview(url: String) {
                         view: WebView?,
                         request: android.webkit.WebResourceRequest?
                     ): Boolean {
-                        val url = request?.url?.toString()
-                        return if (url != null && url.startsWith("https://api.github.com")) {
+                        val strurl = request?.url?.toString()
+                        return if (strurl != null && strurl.startsWith("https://api.github.com")) {
                             false // Load within the WebView
                         } else {
                             // Open in system browser (you'll need to handle this)
