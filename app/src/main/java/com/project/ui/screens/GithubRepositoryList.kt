@@ -43,8 +43,6 @@ fun GithubRepositoryList(
         }
     }
 
-
-
 }
 
 @Composable

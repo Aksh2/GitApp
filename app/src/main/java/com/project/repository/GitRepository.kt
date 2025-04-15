@@ -1,6 +1,7 @@
 package com.project.repository
 
 import com.project.data.BaseState
+import com.project.data.Constants.SOMETHING_WENT_WRONG
 import com.project.data.GitHubUserRepoDetails
 import com.project.data.model.GitHubUserDetails
 import retrofit2.Response
@@ -21,13 +22,13 @@ interface GitRepository {
                 } else if (default != null) {
                     BaseState.Success(default)
                 } else {
-                    BaseState.Error("Empty response body")
+                    BaseState.Error(SOMETHING_WENT_WRONG)
                 }
             } else {
                 BaseState.Error(response.message())
             }
         } catch (e: Exception) {
-            BaseState.Error(e.message ?: "An unexpected error occurred")
+            BaseState.Error(e.message ?: SOMETHING_WENT_WRONG)
         }
     }
 
