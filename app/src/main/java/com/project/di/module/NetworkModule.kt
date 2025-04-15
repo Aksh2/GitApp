@@ -1,6 +1,7 @@
 package com.project.di.module
 
 import com.project.data.Constants
+import com.project.network.AuthInterceptor
 import com.project.network.GitApiService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -17,6 +18,7 @@ val networkModule = module {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
+            .addInterceptor(get<AuthInterceptor>())
             .build()
     }
 
@@ -35,6 +37,11 @@ val networkModule = module {
             .client(get())
             .build()
             .create(GitApiService::class.java)
+    }
+
+    // Provide AuthInterceptor instance
+    single {
+        AuthInterceptor()
     }
 
 
