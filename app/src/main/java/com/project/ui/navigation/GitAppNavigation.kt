@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.project.ui.screens.GithubUserDetailsView
 import com.project.ui.screens.GithubUserDetailscreen
-import com.project.ui.screens.Webview
 import com.project.ui.screens.WebviewScreen
 import java.net.URLEncoder
 
