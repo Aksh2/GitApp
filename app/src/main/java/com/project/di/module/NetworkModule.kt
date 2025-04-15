@@ -15,10 +15,13 @@ val networkModule = module {
     // Provide okhttp instance with Http logging
     single {
         OkHttpClient.Builder()
+            // for debugging purpose only
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
-            .addInterceptor(get<AuthInterceptor>())
+            // This code is intentionally commented. AuthInterceptor is only used for demo purpose
+            // and for testing purpose.
+            //.addInterceptor(get<AuthInterceptor>())
             .build()
     }
 
