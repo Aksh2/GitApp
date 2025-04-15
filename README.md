@@ -3,7 +3,8 @@ GitHub Application to browse a list of users and view their details. The followi
 ## Technical Specifications:
 
 - ### Architecture: MVVM
-- ### UIJetpack Compose
+- ### UI:
+- Jetpack Compose
 - ### Compose Navigation
 - ### DI Framework: Koin
 - ### Image Lib: Coil
