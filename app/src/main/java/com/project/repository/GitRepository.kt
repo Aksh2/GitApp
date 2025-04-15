@@ -1,13 +1,13 @@
 package com.project.repository
 
 import com.project.data.BaseState
-import com.project.data.GitHubUserDetails
-import com.project.data.GithubUser
-import com.project.data.UserListState
+import com.project.data.GitHubUserRepoDetails
+import com.project.data.model.GitHubUserDetails
+import com.project.data.model.GithubUser
 import retrofit2.Response
 
 interface GitRepository {
-    suspend fun getUsers(): BaseState<List<GithubUser>>
+    suspend fun getUsers(): BaseState<List<GitHubUserDetails>>
     suspend fun getUserDetails(loginId: String): BaseState<GitHubUserDetails>
     suspend fun <T> handleApiCall(
         apiCall: suspend () -> Response<T>,
@@ -31,4 +31,6 @@ interface GitRepository {
             BaseState.Error(e.message ?: "An unexpected error occurred")
         }
     }
+
+    suspend fun getRepositoryList(loginId: String): BaseState<List<GitHubUserRepoDetails>>
 }

@@ -12,6 +12,7 @@ import org.koin.dsl.koinConfiguration
 /**
  * This is the main application class.
  */
+@OptIn(KoinExperimentalAPI::class)
 class GitAppApplication: Application(), KoinStartup {
 
     @KoinExperimentalAPI
