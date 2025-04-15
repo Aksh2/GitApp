@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.project.ui.screens.GithubUserDetailsView
-import com.project.ui.screens.GithubUserDetailscreen
+import com.project.ui.screens.GithubUserDetailScreen
 import com.project.ui.screens.WebviewScreen
 import java.net.URLEncoder
 
@@ -22,7 +22,7 @@ fun GitAppNavigation() {
         // User Details and list of Repositories screen
         composable("userDetails/{username}") { backStackEntry ->
             val username = backStackEntry.arguments?.getString("username").orEmpty()
-            GithubUserDetailscreen(
+            GithubUserDetailScreen(
                 login = username,
                 onBackPress = { navController.popBackStack() },
                 onRepositoryClick = {
