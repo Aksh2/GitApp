@@ -39,7 +39,7 @@ fun ChipText(text: String, icon: ImageVector){
         leadingIcon = {
             Icon(
                 icon,
-                contentDescription = "Localized description",
+                contentDescription = "$text chip",
                 Modifier.size(AssistChipDefaults.IconSize)
             )
         }

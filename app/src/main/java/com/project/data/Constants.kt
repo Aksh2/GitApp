@@ -1,7 +1,6 @@
 package com.project.data
 
 object Constants {
-    const val BASE_URL = "https://api.github.com/"
     const val AUTHORIZATION = "Authorization"
     const val UNKNOWN = "Unknown"
     const val NOT_AVAILABLE = "Not Available"
@@ -13,7 +12,7 @@ object Constants {
     // Appbar Headers
     const val REPOSITORY_DETAILS = "Repository Details"
     const val APP_NAME = "GitApp"
-
+    const val SEARCH_HINT = "Enter username to search"
 
 
 }

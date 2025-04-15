@@ -1,6 +1,6 @@
 package com.project.di.module
 
-import com.project.data.Constants
+import com.project.BuildConfig
 import com.project.network.AuthInterceptor
 import com.project.network.GitApiService
 import com.squareup.moshi.Moshi
@@ -35,7 +35,7 @@ val networkModule = module {
     // Provide retrofit instance
     single {
         Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(get()))
             .client(get())
             .build()

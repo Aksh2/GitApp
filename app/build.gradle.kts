@@ -5,6 +5,10 @@ plugins {
     alias(libs.plugins.kotlin.ser)
 }
 
+extra.apply {
+    set("baseUrl", "https://api.github.com/")
+}
+
 android {
     namespace = "com.project"
     compileSdk = 35
@@ -17,6 +21,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"${extra.get("baseUrl")}\"")
     }
 
     buildTypes {
@@ -37,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
