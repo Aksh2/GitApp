@@ -72,6 +72,7 @@ dependencies {
 
     //coil
     implementation(libs.coil)
+    implementation(libs.coil.network)
 
     implementation(libs.kotlin.serialization)
     implementation(libs.kotlin.serialization.converter)
