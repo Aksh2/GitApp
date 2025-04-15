@@ -1,12 +1,13 @@
 package com.project.repository
 
 import com.project.data.BaseState
-import com.project.data.GitHubUserDetails
-import com.project.data.GithubUser
+import com.project.data.GitHubUserRepoDetails
+import com.project.data.model.GitHubUserDetails
+import com.project.data.model.GithubUser
 import com.project.network.GitApiService
 
 class GitRepositoryImpl(private val gitApiService: GitApiService) : GitRepository {
-    override suspend fun getUsers(): BaseState<List<GithubUser>> {
+    override suspend fun getUsers(): BaseState<List<GitHubUserDetails>> {
         return handleApiCall(
             apiCall = { gitApiService.getListUsers() },
             default = emptyList()
@@ -16,11 +17,15 @@ class GitRepositoryImpl(private val gitApiService: GitApiService) : GitRepositor
     override suspend fun getUserDetails(loginId: String): BaseState<GitHubUserDetails> {
         return handleApiCall(
             apiCall = { gitApiService.getUserDetails(loginId) },
-            default = GitHubUserDetails(
-                null, null, null, null, null
-            )
+            default = null
         )
     }
 
+    override suspend fun getRepositoryList(loginId: String): BaseState<List<GitHubUserRepoDetails>> {
+        return handleApiCall(
+            apiCall = { gitApiService.getReposList(loginId) },
+            default = emptyList()
+        )
+    }
 
 }
