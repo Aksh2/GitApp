@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.project.data.BaseState
+import com.project.data.Constants.APP_NAME
 import com.project.data.Constants.NO_RESULTS
 import com.project.data.Constants.SOMETHING_WENT_WRONG
 import com.project.data.Constants.UNKNOWN
@@ -62,17 +65,19 @@ fun GithubUserDetailsView(
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
-    BaseScaffold("GitApp") {
+    BaseScaffold(APP_NAME, false) {
         Column(modifier = it.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                label = { Text("Enter username to search") },
+                placeholder = { Text("Enter username to search") },
                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon") },
                 modifier = Modifier
                     .padding(16.dp)
                     .wrapContentSize(align = Alignment.Center)
+                    .fillMaxWidth()
             )
+
             GithubUserList(
                 onItemClick = onItemClick,
                 searchQuery = searchQuery
@@ -90,7 +95,7 @@ fun GithubUserDetailsView(
  *
  * @param onItemClick Callback function to be invoked when a user item is clicked.
  *                  It receives the clicked [GitHubUserDetails] as a parameter.
- * @param modifier Modifier for the layout of the user list.
+ *
  */
 @Composable
 fun GithubUserList(
@@ -168,14 +173,14 @@ fun GithubUserItem(item: GitHubUserDetails, onClick: () -> Unit) {
                 contentDescription = null,
                 modifier = Modifier
                     .size(64.dp)
-                    .clip(RoundedCornerShape(4.dp)),
+                    .clip(CircleShape),
                 contentScale = ContentScale.Crop,
             )
 
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = item.login ?: UNKNOWN,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.titleMedium
             )
         }
     }

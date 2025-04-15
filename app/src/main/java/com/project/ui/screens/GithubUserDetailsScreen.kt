@@ -8,7 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,15 +27,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.project.data.BaseState
 import com.project.data.Constants.SOMETHING_WENT_WRONG
+import com.project.data.Constants.UNKNOWN
 import com.project.data.model.GitHubUserDetails
 import com.project.ui.baseui.BaseScaffold
+import com.project.ui.baseui.ChipText
 import com.project.ui.baseui.ErrorOverlay
 import com.project.ui.baseui.Loader
 import com.project.viewmodel.UserViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun GithubUserDetailscreen(
+fun GithubUserDetailScreen(
     login: String, onBackPress: () -> Unit, onRepositoryClick: (repoUrl: String) -> Unit
 ) {
     val viewModel: UserViewModel = koinViewModel()
@@ -42,7 +49,7 @@ fun GithubUserDetailscreen(
         viewModel.getUserRepositoryList(login)
     }
 
-    BaseScaffold("$login details", onBackPress) {
+    BaseScaffold(title = "$login details", onBackPress =  onBackPress) {
         Column(modifier = it.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
             GithubUserDetailsView(viewModel)
@@ -104,40 +111,40 @@ fun GithubRepositoryList(
 
 @Composable
 fun GithubUserDetailsItem(item: GitHubUserDetails) {
-    Row(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AsyncImage(
-            model = item.avatarUrl,
-            contentDescription = null,
+    Card(shape = RoundedCornerShape(8.dp)) {
+        Row(
             modifier = Modifier
-                .size(64.dp)
-                .clip(RoundedCornerShape(4.dp)),
-            contentScale = ContentScale.Crop,
-        )
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = item.avatarUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop,
+            )
 
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = "Username: ${item.name.orEmpty()}",
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Column {
-            Text(
-                text = "Name: ${item.name.orEmpty()}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Followers: ${item.followers}",
-                style = MaterialTheme.typography.bodySmall
-            )
-            Text(
-                text = "Following: ${item.following}",
-                style = MaterialTheme.typography.bodySmall
-            )
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column {
+                Text(
+                    text = item.name ?: UNKNOWN,
+                    style = MaterialTheme.typography.headlineMedium
+                )
+                Text(
+                    text = "@${item.login}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Row {
+                    ChipText("${(item.followers ?: 0)}" , Icons.Filled.Person)
+                    Spacer(Modifier.size(4.dp))
+                    ChipText(" ${(item.following ?: 0)}", icon = Icons.Filled.AccountBox)
+                }
+            }
+
         }
-
     }
 }
