@@ -38,6 +38,7 @@ import coil3.compose.AsyncImage
 import com.project.data.BaseState
 import com.project.data.Constants.APP_NAME
 import com.project.data.Constants.NO_RESULTS
+import com.project.data.Constants.SEARCH_HINT
 import com.project.data.Constants.SOMETHING_WENT_WRONG
 import com.project.data.Constants.UNKNOWN
 import com.project.data.model.GitHubUserDetails
@@ -67,7 +68,7 @@ fun GithubUserDetailsView(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text("Enter username to search") },
+                placeholder = { Text(SEARCH_HINT) },
                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon") },
                 modifier = Modifier
                     .padding(16.dp)
