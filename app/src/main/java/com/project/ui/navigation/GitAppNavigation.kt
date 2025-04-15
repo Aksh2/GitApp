@@ -4,7 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.project.ui.page.GithubUserListScreen
+import com.project.ui.screens.GithubUserDetailsView
+import com.project.ui.screens.GithubUserDetailscreen
+import com.project.ui.screens.Webview
+import com.project.ui.screens.WebviewScreen
+import java.net.URLEncoder
 
 @Composable
 fun GitAppNavigation() {
@@ -12,13 +16,25 @@ fun GitAppNavigation() {
     NavHost(navController, startDestination = "userList") {
         // User List Screen will be the base screen
         composable("userList") {
-            GithubUserListScreen(onItemClick = { user ->
-                navController.navigate("userDetails/${user.login}")
-            })
+            GithubUserDetailsView {
+                navController.navigate("userDetails/${it.login}")
+            }
         }
+        // User Details and list of Repositories screen
         composable("userDetails/{username}") { backStackEntry ->
-            val username = backStackEntry.arguments?.getString("username")
-            // UserDetailsScreen(username = username)
+            val username = backStackEntry.arguments?.getString("username").orEmpty()
+            GithubUserDetailscreen(
+                login = username,
+                onBackPress = { navController.popBackStack() },
+                onRepositoryClick = {
+                    val encodedUrl = URLEncoder.encode(it, "UTF-8")
+                    navController.navigate("repositoryDetails/$encodedUrl")
+                })
+        }
+        // Webview to open the user repository
+        composable("repositoryDetails/{url}") { backStackEntry ->
+            val url = backStackEntry.arguments?.getString("url").orEmpty()
+            WebviewScreen(url = url, onBackPress = { navController.popBackStack() })
         }
     }
 }
