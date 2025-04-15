@@ -1,5 +1,6 @@
 package com.project.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,15 +14,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,10 +43,10 @@ import com.project.data.Constants.UNKNOWN
 import com.project.data.model.GitHubUserDetails
 import com.project.ui.baseui.BaseScaffold
 import com.project.ui.baseui.ErrorOverlay
+import com.project.ui.baseui.Loader
 import com.project.viewmodel.UserViewModel
 import org.koin.androidx.compose.koinViewModel
 import kotlin.text.contains
-import kotlin.text.filter
 import kotlin.text.isBlank
 
 /**
@@ -56,14 +59,27 @@ import kotlin.text.isBlank
  *                    a [GitHubUserDetails] object representing the clicked user as input.
  */
 @Composable
-fun GithubUserListScreen(
-    onItemClick: (user: GitHubUserDetails) -> Unit
+fun GithubUserDetailsView(
+    onItemClick: (user: GitHubUserDetails) -> Unit,
 ) {
+    var searchQuery by remember { mutableStateOf("") }
+
     BaseScaffold("GitApp") {
-        GithubUserList(
-            modifier = it,
-            onItemClick = onItemClick
-        )
+        Column(modifier = it.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                label = { Text("Enter username to search") },
+                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon") },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .wrapContentSize(align = Alignment.Center)
+            )
+            GithubUserList(
+                onItemClick = onItemClick,
+                searchQuery = searchQuery
+            )
+        }
     }
 }
 
@@ -81,53 +97,44 @@ fun GithubUserListScreen(
 @Composable
 fun GithubUserList(
     onItemClick: (user: GitHubUserDetails) -> Unit,
-    modifier: Modifier = Modifier
+    searchQuery: String
 ) {
     val viewModel: UserViewModel = koinViewModel()
     LaunchedEffect(Unit) {
         viewModel.getUsers()
     }
 
-    var searchQuery by remember { mutableStateOf("") }
+    val userListState by viewModel.userListState.collectAsStateWithLifecycle(initialValue = BaseState.Loading())
+    when (val state = userListState) {
+        is BaseState.Loading -> {
+            Loader()
+        }
 
-
-    Column(modifier = modifier.fillMaxSize()) {
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it },
-            label = { Text("Search") },
-            modifier = Modifier.padding(16.dp).wrapContentSize(align = Alignment.Center)
-        )
-
-        val userListState by viewModel.userListState.collectAsStateWithLifecycle(initialValue = BaseState.Loading())
-        when (val state = userListState) {
-            is BaseState.Loading -> {}
-            is BaseState.Success -> {
-                val data = state.response
-                val filteredItems = remember(searchQuery, data) {
-                    if (searchQuery.isBlank()) {
-                        data
-                    } else {
-                        data.filter { it.login?.contains(searchQuery, ignoreCase = true) ?: false }
-                    }
-                }
-                if (filteredItems.isEmpty() && searchQuery.isNotEmpty()) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("$NO_RESULTS '$searchQuery'")
-                    }
+        is BaseState.Success -> {
+            val data = state.response
+            val filteredItems = remember(searchQuery, data) {
+                if (searchQuery.isBlank()) {
+                    data
                 } else {
-                    LazyColumn(modifier = modifier) {
-                        items(filteredItems) { item ->
-                            GithubUserItem(item = item, onClick = { onItemClick(item) })
-                        }
+                    data.filter { it.login?.contains(searchQuery, ignoreCase = true) ?: false }
+                }
+            }
+            if (filteredItems.isEmpty() && searchQuery.isNotEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("$NO_RESULTS '$searchQuery'")
+                }
+            } else {
+                LazyColumn {
+                    items(filteredItems) { item ->
+                        GithubUserItem(item = item, onClick = { onItemClick(item) })
                     }
                 }
-
             }
 
-            is BaseState.Error -> {
-                ErrorOverlay(SOMETHING_WENT_WRONG)
-            }
+        }
+
+        is BaseState.Error -> {
+            ErrorOverlay(SOMETHING_WENT_WRONG)
         }
     }
 
@@ -159,7 +166,7 @@ fun GithubUserItem(item: GitHubUserDetails, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = item.avatar_url,
+                model = item.avatarUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .size(64.dp)
