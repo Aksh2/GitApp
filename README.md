@@ -4,3 +4,8 @@ GitHub Application to browse a list of users and view their details. The followi
 - Image Loading: Coil
 - Architecture: MVVM
 - Network: Retrofit
+
+## DEMO Video:
+
+https://github.com/user-attachments/assets/ff107c25-3263-4300-b386-2b50da6fdc67
+
