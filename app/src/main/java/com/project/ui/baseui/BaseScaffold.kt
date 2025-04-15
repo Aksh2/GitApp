@@ -15,17 +15,17 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseScaffold(
     title: String,
+    showBackNavigation: Boolean = true,
     onBackPress: () -> Unit = {},
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     MaterialTheme {
         Scaffold(
             topBar = {
-                TopBar(title,onBackPress)
+                TopBar(title, showBackNavigation, onBackPress)
             },
             content = { paddingValues ->
                 content(Modifier.padding(paddingValues))
@@ -38,7 +38,7 @@ fun BaseScaffold(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    title: String, onBackPress: () -> Unit = {},
+    title: String, showBackNavigation: Boolean, onBackPress: () -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -49,11 +49,13 @@ fun TopBar(
         ),
         title = { Text(title) },
         navigationIcon = {
-            IconButton(onClick = onBackPress) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Localized description"
-                )
+            if (showBackNavigation) {
+                IconButton(onClick = onBackPress) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back Button"
+                    )
+                }
             }
         },
         scrollBehavior = scrollBehavior
