@@ -10,4 +10,10 @@ object Constants {
     const val SOMETHING_WENT_WRONG = "Something went wrong. Please Try Again Later"
     const val  NO_RESULTS = "No results found for"
 
+    // Appbar Headers
+    const val REPOSITORY_DETAILS = "Repository Details"
+    const val APP_NAME = "GitApp"
+
+
+
 }
