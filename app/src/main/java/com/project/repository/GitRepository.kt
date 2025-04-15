@@ -3,7 +3,6 @@ package com.project.repository
 import com.project.data.BaseState
 import com.project.data.GitHubUserRepoDetails
 import com.project.data.model.GitHubUserDetails
-import com.project.data.model.GithubUser
 import retrofit2.Response
 
 interface GitRepository {

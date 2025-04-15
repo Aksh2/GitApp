@@ -3,7 +3,6 @@ package com.project.repository
 import com.project.data.BaseState
 import com.project.data.GitHubUserRepoDetails
 import com.project.data.model.GitHubUserDetails
-import com.project.data.model.GithubUser
 import com.project.network.GitApiService
 
 class GitRepositoryImpl(private val gitApiService: GitApiService) : GitRepository {
